@@ -34,21 +34,17 @@ var container;
       renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio(window.devicePixelRatio);
 
-      container.appendChild(renderer.domElement);
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      
+      uniforms.u_resolution.value.x = renderer.domElement.width;
+      uniforms.u_resolution.value.y = renderer.domElement.height;
 
-      onWindowResize();
-      window.addEventListener('resize', onWindowResize, false);
+      container.appendChild(renderer.domElement);
 
       document.onmousemove = function (e) {
         uniforms.u_mouse.value.x = e.pageX
         uniforms.u_mouse.value.y = e.pageY
       }
-    }
-
-    function onWindowResize(event) {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      uniforms.u_resolution.value.x = renderer.domElement.width;
-      uniforms.u_resolution.value.y = renderer.domElement.height;
     }
 
     function animate() {

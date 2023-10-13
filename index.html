@@ -1,22 +1,44 @@
 <head>
   <title>Shaders</title>
 </head>
-<body>
-  <div id="container"></div>
+
+<body bgcolor="#2b2b2b">
+  <div id="container" style="width: 500px; height: 500px;"></div>
   <script src="js/three/three.min.js"></script>
   <script id="vertexShader" type="x-shader/x-vertex">
-        void main() {
-            gl_Position = vec4( position, 1.0 );
-        }
-    </script>
+    void main() {
+        gl_Position = vec4( position, 1.0 );
+    }
+  </script>
   <script id="fragmentShader" type="x-shader/x-fragment">
-        uniform vec2 u_resolution;
-        uniform float u_time;
+    // First master 1 dimentional functions
+    #ifdef GL_ES
+    precision mediump float;
+    #endif
 
-        void main() {
-            vec2 st = gl_FragCoord.xy/u_resolution.xy;
-            gl_FragColor=vec4(st.x,st.y,0.0,1.0);
-        }
-    </script>
+    #define PI 3.14159265359
+
+    uniform vec2 u_resolution;
+    uniform float u_mouse;
+    uniform float u_time;
+
+    float plot(vec2 st, float pct) {
+      return smoothstep(pct - 0.02, pct, st.y) - smoothstep(pct, pct + 0.02, st.y);
+    }
+
+    void main() {
+      vec2 st = gl_FragCoord.xy/u_resolution;
+
+      float y = sin(st.x);
+
+      vec3 color = vec3(y);
+
+      // Plot a line
+      float pct = plot(st, y);
+      color = (1.0 - pct) * color + pct * vec3(0.0, 1.0, 0.0);
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  </script>
   <script src="js/main.js"></script>
 </body>
